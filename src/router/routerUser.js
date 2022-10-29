@@ -42,7 +42,12 @@ routerUser.get("/login", async (req, res) => {
 });
 
 routerUser.post("/signup", async (req, res) => {
+  console.log(req.body);
   const { name, email, password } = req.body;
+
+  const findUser = await User.findOne({
+    email,
+  });
 
   if (!name || name === " ") {
     return res.status(422).json({ message: "Nome é obrigatório" });
@@ -54,6 +59,10 @@ routerUser.post("/signup", async (req, res) => {
 
   if (!password || password === " ") {
     return res.status(422).json({ message: "Senha é obrigatória" });
+  }
+
+  if (findUser) {
+    return res.status(422).json({ message: "E-mail já estar em uso" });
   }
 
   const saltRounds = 10;
