@@ -8,6 +8,10 @@ export const getUserByToken = async (token, res) => {
 
   const payload = jwt.verify(token, process.env.JWT_SECRET);
 
+  if (!payload) {
+    return res.status(401);
+  }
+
   const user = await User.findOne({ _id: payload.sub });
 
   if (!user) {

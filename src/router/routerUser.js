@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { User } from "../models/User.js";
 
+import { getByToken } from "../helpers/getToken.js";
+import { getUserByToken } from "../helpers/getUserByToken.js";
+
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
@@ -39,6 +42,13 @@ routerUser.get("/login", async (req, res) => {
     email: user.email,
     accessToken,
   });
+});
+
+routerUser.get("/auth", async (req, res) => {
+  const token = await getByToken(req);
+  const user = await getUserByToken(token, res);
+
+  return res.status(200);
 });
 
 routerUser.post("/signup", async (req, res) => {
